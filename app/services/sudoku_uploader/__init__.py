@@ -1,1 +1,2 @@
-from .from_json import SudokuJsonUploader
+from .from_json import SudokuJsonUploaderService
+from .base import SudokuUploaderInterface

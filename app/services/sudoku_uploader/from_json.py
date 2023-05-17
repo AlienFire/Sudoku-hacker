@@ -1,6 +1,6 @@
 import json
 
-from .base import SudokuUploaderInterface
+from app.services.sudoku_uploader.base import SudokuUploaderInterface
 
 class SudokuJsonUploaderService(SudokuUploaderInterface):
     file_name:str
