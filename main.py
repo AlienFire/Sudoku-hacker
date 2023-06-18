@@ -1,30 +1,12 @@
-from app.services.sudoku_uploader import SudokuJsonUploaderService, SudokuUploaderInterface
-from app.services.sudoku_view import SudokuConsoleView, SudokuViewInterface
+from app.services.sudoku_uploader.from_json import SudokuJsonUploaderService
+from app.services.sudoku_view.to_console import SudokuConsoleView
+from app.domain.use_case.sudoku_solve import Solver
 
+FILE_NAME = "moc_hard_sudoku.json"
 
-class SudokuSolution():
-    _task_uploader: SudokuUploaderInterface
-    _solution_view: SudokuViewInterface
-
-    def __init__(
-        self,
-        task_uploader: SudokuUploaderInterface,
-        solution_view: SudokuViewInterface,
-    ) -> None:
-        self._task_uploader = task_uploader
-        self._solution_view = solution_view
-
-    def execute(self) -> None:
-        sudoku_task = self._task_uploader.get_sudoku_task()
-        self._solution_view.show(sudoku_task)
-
-
-json_uploader = SudokuJsonUploaderService(file_name="moc_sudoku.json")
-sudoku_view = SudokuConsoleView()
-
-ss = SudokuSolution(
-    task_uploader=json_uploader,
-    solution_view=sudoku_view
+sudoku_solver = Solver(
+    uploader=SudokuJsonUploaderService(file_name=FILE_NAME),
+    viewer=SudokuConsoleView(),
 )
 
-ss.execute()
+sudoku_solver.execute()

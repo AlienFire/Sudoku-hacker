@@ -1,7 +1,10 @@
-import json
 from tools import get_without_stars
-FULL_COLLECTION = {1, 2, 3, 4, 5, 6, 7, 8, 9}
-SQ_SIZE = 3
+from settings import EMPTY_VAL
+from app.domain.entity.constants import (
+    SUDOKU_SIZE,
+    FULL_COLLECTION,
+    SQ_SIZE,
+)
 
 
 class Sudoku:
@@ -12,7 +15,7 @@ class Sudoku:
 
     def get_row(self, row_number: int) -> list:
         """Получение всей строки по индексу"""
-        if row_number < 9:
+        if row_number < SUDOKU_SIZE:
             return get_without_stars(self.board[row_number])
         return {}
 
@@ -26,15 +29,15 @@ class Sudoku:
         sq_row = row_number // SQ_SIZE
         sq_column = column_number // SQ_SIZE
         square_colection = []
-        for i in range(sq_row*3, sq_row*3+3):
-            for j in range(sq_column*3, sq_column*3+3):
+        for i in range(sq_row * 3, sq_row * 3 + 3):
+            for j in range(sq_column * 3, sq_column * 3 + 3):
                 square_colection.append(self.board[i][j])
         return get_without_stars(square_colection)
 
     def is_solved(self) -> bool:
         """Проверяет есть ли пустые значения в судоку"""
         for row in self.board:
-            if "*" in row:
+            if EMPTY_VAL in row:
                 return False
 
         return True
@@ -44,17 +47,12 @@ class Sudoku:
         empty_cells = {}
         for x in range(len(self.board)):
             for y in range(len(self.board)):
-                if self.board[x][y] == "*":
+                if self.board[x][y] == EMPTY_VAL:
                     empty_cells[(x, y)] = FULL_COLLECTION
         return empty_cells
 
-    def set_cell_value(self, row_number, column_number, possible_value):
+    def set_cell_value(self, cell_idx: tuple[int], possible_value):
         """Устанавливает значение в ячейку"""
+        row_number, column_number = cell_idx
         self.board[row_number][column_number] = possible_value
         return self.board
-
-
-def get_sudoku_task(file_name) -> list[list]:
-    with open(file_name) as f:
-        data = json.load(f)
-    return data.get('board')
